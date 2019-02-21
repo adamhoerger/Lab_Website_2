@@ -33,7 +33,17 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 					 To reveal the html tag (toggle - 1), the visibility will be set to visible and
 					 the height will be set to auto.
 */
-				
+function viewStudentStats(id, toggle) {
+	if (toggle == 0) {
+		document.getElementById(id).style.visibility = "hidden";
+		document.getElementById(id).style.height = "0px";
+	}
+	else {
+		document.getElementById(id).style.visibility = "visible";
+		document.getElementById(id).style.height = "auto";
+	}
+}
+
 /*
 	Home Page: 
 		changeColor(color) method
@@ -43,7 +53,9 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 			purpose: This method will set the html body's background color to the 
 					 provided parameter.
 */
-
+function changeColor(color) {
+	document.body.style.backgroundColor = color;
+}
 
 /*
 	Football Season Stats Page:
@@ -61,6 +73,29 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 						
 						4. Update the second table to show the total number of wins/losses for the Buffs.
 */
+function loadStatsPage() {
+	var table = document.getElementById("stats_table");
+	var wins = 0;
+	var losses = 0;
+	for(let i = 2; i < table.rows.length; i++) {
+		var home_score = parseInt(table.rows[i].cells[2].innerHTML);
+		var opp_score = parseInt(table.rows[i].cells[3].innerHTML);
+		if (home_score > opp_score) {
+			var winner = "CU Boulder";
+			wins++;
+		}
+		else if (home_score < opp_score) {
+			var winner = table.rows[i].cells[1].innerHTML;
+			losses++;
+		}
+		else {
+			var winner = "Tie";
+		}
+		table.rows[i].cells[4].innerHTML = winner;
+	}
+	document.getElementById("wins").innerHTML = wins;
+	document.getElementById("losses").innerHTML = losses;
+}
 
 /*
 	Football Player Information Page
@@ -104,5 +139,24 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 					  avg_r_yards   - the average number of rushing yards for the player's Buff career
 					  avg_rec_yards - the average number of receiving yards for the player's Buff career
 */
-				
+function loadPlayersPage() {
+	var selection_text = "";
+	for (let player_i = 0; player_i < players.length; player_i++)
+	{
+		selection_text += "<a class=\"dropdown-item\" href=\"#\" onclick=\"switchPlayers(" + player_i + ")\">" + players[player_i].name + "</a>";
+	}
+	document.getElementById("player_selector").innerHTML = selection_text;
+}
 
+function switchPlayers(playerNum) {
+	document.getElementById("p_year").innerHTML = players[playerNum].year;
+	document.getElementById("p_major").innerHTML = players[playerNum].major;
+	document.getElementById("g_played").innerHTML = players[playerNum].games_played;
+	document.getElementById("player_img").innerHTML = players[playerNum].img;
+	document.getElementById("p_yards").innerHTML = players[playerNum].pass_yards;
+	document.getElementById("r_yards").innerHTML = players[playerNum].rushing_yards;
+	document.getElementById("rec_yards").innerHTML = players[playerNum].receiving_yards;
+	document.getElementById("avg_p_yards").innerHTML = (players[playerNum].pass_yards/players[playerNum].games_played).toFixed(2);
+	document.getElementById("avg_r_yards").innerHTML = (players[playerNum].rushing_yards/players[playerNum].games_played).toFixed(2);
+	document.getElementById("avg_rec_yards").innerHTML = (players[playerNum].receiving_yards/players[playerNum].games_played).toFixed(2);
+}
